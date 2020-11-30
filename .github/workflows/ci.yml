@@ -34,7 +34,7 @@ jobs:
       - name: Test
         run: ./test.sh
         env:
-          TR_UPLOAD_TOKEN: ${{ secrets.TR_UPLOAD_TOKEN }}
+          TR_UPLOAD_TOKEN: VrYKBzKODDZQhzRFLJfNIdDsBalpHc
 
   release:
     name: Release
