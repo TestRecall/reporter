@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite tests="2" failures="0" time="0.016" name="single_failure/m/billing">
+		<properties>
+			<property name="go.version" value="go1.13.4"></property>
+		</properties>
+		<testcase classname="billing" name="TestBilling" time="0.000"></testcase>
+		<testcase classname="billing" name="TestAddPayment" time="0.010"></testcase>
+	</testsuite>
+	<testsuite tests="1" failures="1" time="0.017" name="single_failure/m/register">
+		<properties>
+			<property name="go.version" value="go1.13.4"></property>
+		</properties>
+		<testcase classname="register" name="TestRegister" time="0.020">
+			<failure message="Failed" type="">register_test.go:26: name: faz got 0, want 10</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

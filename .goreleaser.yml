@@ -1,0 +1,53 @@
+project_name: testrecall
+
+builds:
+  - <<: &build_defaults
+      binary: reporter
+      main: .
+      ldflags:
+        - -X main.Version={{.Version}}
+        - -X main.Date={{.Date}}
+        - -X main.Commit={{.ShortCommit}}
+        - -X main.RemoteURL=https://api.testrecall.com
+      id: macos
+      goos: [darwin]
+      goarch: [amd64]
+      env:
+        - CGO_ENABLED=0
+
+  - <<: *build_defaults
+    id: linux
+    goos: [linux]
+    goarch: [386, amd64, arm64]
+
+  - <<: *build_defaults
+    id: windows
+    goos: [windows]
+    goarch: [386, amd64]
+
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format: binary
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+release:
+  prerelease: auto
+  draft: true
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
