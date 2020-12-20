@@ -238,10 +238,6 @@ func (r *RequestPayload) GetBuildNumber() {
 			return
 		}
 	}
-
-	if r.RequestData.BuildNumber == "" {
-		r.Logger.Fatal("-buildnumber is a required field")
-	}
 }
 
 func (r *RequestPayload) GetBuildURL() {
@@ -254,10 +250,6 @@ func (r *RequestPayload) GetBuildURL() {
 		if r.RequestData.BuildURL != "" {
 			return
 		}
-	}
-
-	if r.RequestData.BuildURL == "" {
-		r.Logger.Fatal("-buildurl is a required field")
 	}
 }
 
