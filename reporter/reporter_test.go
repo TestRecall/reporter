@@ -293,3 +293,40 @@ func runCmd(dir, c string) ([]byte, error) {
 	cmd.Dir = dir
 	return cmd.CombinedOutput()
 }
+
+func TestGetRunData(t *testing.T) {
+	d, err := ioutil.TempDir("", "s-")
+	assert.NoError(t, err)
+	defer os.RemoveAll(d)
+
+	for _, tt := range []struct {
+		file    string
+		pattern string
+		match   int
+	}{
+		{"/a/f.xml", "/a/f.xml", 1},
+		{"/f.xml", "*", 1},
+		{"/f.xml", "/*.xml", 1},
+		{"/a/f.xml", "/a/*.xml", 1},
+		{"/a/b/f.xml", "/*/*/*.xml", 1},
+		{"/a/b/c/f-oo.xml", "/*/*/f*xml", 1},
+		{"/a/b/c/d/f-oo.xml", "/*/*/*/*/f-*.xml", 1},
+	} {
+		file := d + tt.file
+		pattern := d + tt.pattern
+		fmt.Println(file, pattern)
+
+		err := os.MkdirAll(filepath.Dir(file), 0755)
+		assert.NoError(t, err)
+
+		_, err = os.Create(file)
+		assert.NoError(t, err)
+
+		matches, err := reporter.SearchReportFiles(pattern)
+		assert.NoError(t, err)
+
+		if tt.match != len(matches) {
+			t.Errorf("wanted %v got %v, with path %s pattern %s", tt.match, len(matches), file, pattern)
+		}
+	}
+}

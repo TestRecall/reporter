@@ -56,6 +56,7 @@ type RequestPayload struct {
 	IdempotencyKey string
 	UploadToken    string
 	Filename       string
+	FilePattern    string
 
 	RequestData RequestData
 
@@ -271,29 +272,18 @@ func (r *RequestPayload) GetRunData() {
 		r.Logger.Fatal(err, MultiErrorMessage)
 	}
 
-	if r.Filename != "" {
-		data, err := ioutil.ReadFile(r.Filename)
+	files, err := SearchReportFiles(r.Filename)
+	if err != nil {
+		r.Logger.Fatal(err, noFileMessage(r.Filename))
+	}
+	r.RequestData.Filenames = files
+
+	for _, file := range files {
+		data, err := ioutil.ReadFile(file)
 		if err != nil {
-			r.Logger.Fatal(err, noFileMessage(r.Filename))
+			r.Logger.Fatal(err, noFileMessage(file))
 		}
 		r.RequestData.RunData = append(r.RequestData.RunData, data)
-
-		return
-	} else {
-		files, err := searchReportFiles()
-		if err != nil {
-			r.Logger.Fatal(err, noFileMessage(r.Filename))
-		}
-		r.RequestData.Filenames = files
-		r.Logger.Debug("found test files: ", files)
-
-		for _, file := range files {
-			data, err := ioutil.ReadFile(file)
-			if err != nil {
-				r.Logger.Fatal(err, noFileMessage(file))
-			}
-			r.RequestData.RunData = append(r.RequestData.RunData, data)
-		}
 	}
 
 	if r.Filename == "" && len(r.RequestData.RunData) == 0 {
@@ -304,20 +294,38 @@ func (r *RequestPayload) GetRunData() {
 	}
 }
 
-var filePatterns = []string{"report*.xml", "junit*.xml", "rspec*.xml"}
-var filePaths = []string{"./", "./reports/", "./test-results/", "/tmp/test-results/"}
+var defaultPatterns = []string{
+	"./*/*/TEST-*.xml",
+	"./*/*/*/TEST-*.xml",
+	"./*/*/*/*/TEST-*.xml",
+	"./*/*/*/*/*/TEST-*.xml",
 
-func searchReportFiles() ([]string, error) {
-	for _, path := range filePaths {
-		for _, pattern := range filePatterns {
-			matches, err := filepath.Glob(path + pattern)
-			if err != nil {
-				return []string{}, err
-			}
-			if len(matches) != 0 {
-				return matches, nil
-			}
+	"junit*.xml",
+	"./reports/junit*.xml",
+	"./test-results/junit*.xml",
+	"/tmp/test-results/junit*.xml",
+
+	"rspec*.xml",
+	"./reports/rspec*.xml",
+	"./test-results/rspec*.xml",
+	"/tmp/test-results/rspec*.xml",
+
+	"report*.xml",
+	"./reports/report*.xml",
+	"./test-results/report*.xml",
+	"/tmp/test-results/report*.xml",
+}
+
+func SearchReportFiles(pattern string) ([]string, error) {
+	if pattern != "" {
+		return filepath.Glob(pattern)
+	}
+
+	for _, p := range defaultPatterns {
+		if matched, err := filepath.Glob(p); err != nil || len(matched) > 0 {
+			return matched, err
 		}
 	}
+
 	return []string{}, nil
 }
