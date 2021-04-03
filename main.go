@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -47,6 +46,8 @@ func main() {
 	}
 
 	logger := logrus.New()
+	logger.SetFormatter(&logrus.TextFormatter{FullTimestamp: true})
+
 	if *debug {
 		logger.Level = logrus.TraceLevel
 	} else {
@@ -98,10 +99,10 @@ func main() {
 
 	sender := reporter.NewSender(logger)
 	if err := sender.Send(url, payload); err != nil {
-		log.Println("upload failed!")
+		logger.Println("upload failed!")
 		logger.Fatalln(err, payload.RequestData)
 	}
-	log.Println("upload success!")
+	logger.Println("upload success!")
 
 	fails, xmlValid := payload.FailureCount()
 	if shouldExitOnFail(*setExitCode) {
