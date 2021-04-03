@@ -1,4 +1,4 @@
 vendor
-/deployment
-/dist
+deployment
+dist
 report.xml
