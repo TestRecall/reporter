@@ -56,7 +56,6 @@ type RequestPayload struct {
 	IdempotencyKey string
 	UploadToken    string
 	Filename       string
-	FilePattern    string
 
 	RequestData RequestData
 
