@@ -3,7 +3,7 @@ module github.com/testrecall-reporter
 go 1.16
 
 require (
-	github.com/hashicorp/go-retryablehttp v0.6.4
+	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/joshdk/go-junit v0.0.0-20191027203205-93e3ed9f3c4c
 	github.com/kr/text v0.2.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect

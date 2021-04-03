@@ -99,10 +99,10 @@ func main() {
 
 	sender := reporter.NewSender(logger)
 	if err := sender.Send(url, payload); err != nil {
-		logger.Println("upload failed!")
+		logger.Debug("upload failed!")
 		logger.Fatalln(err, payload.RequestData)
 	}
-	logger.Println("upload success!")
+	logger.Debug("upload success!")
 
 	fails, xmlValid := payload.FailureCount()
 	if shouldExitOnFail(*setExitCode) {
