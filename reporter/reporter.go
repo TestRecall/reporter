@@ -301,18 +301,19 @@ var defaultPatterns = []string{
 	"./*/*/*/*/*/TEST-*.xml",
 
 	"junit*.xml",
-	"./reports/junit*.xml",
-	"./test-results/junit*.xml",
-	"/tmp/test-results/junit*.xml",
-
 	"rspec*.xml",
-	"./reports/rspec*.xml",
-	"./test-results/rspec*.xml",
-	"/tmp/test-results/rspec*.xml",
-
 	"report*.xml",
+
+	"./reports/junit*.xml",
+	"./reports/rspec*.xml",
 	"./reports/report*.xml",
+
+	"./test-results/junit*.xml",
+	"./test-results/rspec*.xml",
 	"./test-results/report*.xml",
+
+	"/tmp/test-results/junit*.xml",
+	"/tmp/test-results/rspec*.xml",
 	"/tmp/test-results/report*.xml",
 }
 
