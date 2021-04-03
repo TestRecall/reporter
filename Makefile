@@ -1,10 +1,12 @@
+SHELL=bash
+
 test:
 	go test -race -count=1 -v ./...
 
 .PHONY: setup
 setup:
 	go get -u github.com/jstemmer/go-junit-report
-	go mod download
+	go mod tidy
 
 .PHONY: release
 release: ## example: make release V=0.0.0
