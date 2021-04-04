@@ -8,7 +8,7 @@
 This is a TestRecall command line for uploading test reports.
 
  - Downloads can be found under [Releases][releases_url]
- - Documenation can be found [here][docs_url]
+ - Documentation can be found [here][docs_url]
 
 
 ## Installation
@@ -34,6 +34,15 @@ trap 'testrecall-reporter' EXIT
 npm run test # => output report.xml
 ```
 
+### Configuration
+
+| flag  | environment | values | note
+|---    |---              |--- |---
+|`-file`  |                 | \<glob pattern\>      | file path or glob pattern for xml results, e.g. (`/tmp/report.xml`, or `build/*/junit*.xml`)
+|`-multi` |                 | \<'before' \| 'multi' \| 'after'\>| enables multi-stage uploads, for suites that execute on multiple runners
+|       | `TR_UPLOAD_TOKEN` | \<string\>            | upload token for your test project
+
+The test reporter will pick up most configuration options by default, including common default locations for test reports.
 
 ## Compiling
 
