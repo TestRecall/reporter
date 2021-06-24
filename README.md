@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/TestRecall/reporter.svg)](https://github.com/TestRecall/reporter/blob/master/LICENSE)
 
 
-# TestRecal Reporter
+# TestRecall Reporter
 
 This is a TestRecall command line for uploading test reports.
 
