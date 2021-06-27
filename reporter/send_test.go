@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/testrecall-reporter/reporter"
+	"github.com/testrecall/reporter/reporter"
 )
 
 const uploadToken = "abc123"

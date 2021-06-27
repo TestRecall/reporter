@@ -14,7 +14,7 @@ import (
 
 	junit "github.com/joshdk/go-junit"
 	"github.com/sirupsen/logrus"
-	"github.com/testrecall-reporter/ci"
+	"github.com/testrecall/reporter/ci"
 )
 
 var branchCommand = strings.Fields("git log -n 1 --pretty=%D HEAD")

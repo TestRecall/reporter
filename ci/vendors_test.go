@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/testrecall-reporter/ci"
+	"github.com/testrecall/reporter/ci"
 )
 
 func TestUnknownCI(t *testing.T) {
