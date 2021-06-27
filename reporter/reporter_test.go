@@ -11,7 +11,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
-	"github.com/testrecall-reporter/reporter"
+	"github.com/testrecall/reporter/reporter"
 )
 
 func testLogger() *logrus.Logger {

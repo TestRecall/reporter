@@ -1,4 +1,4 @@
-module github.com/testrecall-reporter
+module github.com/testrecall/reporter
 
 go 1.16
 

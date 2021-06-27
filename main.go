@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"github.com/testrecall-reporter/reporter"
+	"github.com/testrecall/reporter/reporter"
 )
 
 var (
