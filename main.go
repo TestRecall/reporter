@@ -100,7 +100,7 @@ func main() {
 	sender := reporter.NewSender(logger)
 	if err := sender.Send(url, payload); err != nil {
 		logger.Debug("upload failed!")
-		logger.Fatalln(err, payload.RequestData)
+		logger.Fatalln(err)
 	}
 	logger.Debug("upload success!")
 

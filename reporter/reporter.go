@@ -165,7 +165,7 @@ func (r *RequestPayload) GetBranch() {
 	out, err := exec.Command(branchCommand[0], branchCommand[1:]...).CombinedOutput()
 	r.Logger.Debugln("branch: ", string(out))
 	if err != nil {
-		r.Logger.Fatal(err)
+		r.Logger.Fatal("git error checking for detached head ", err)
 	}
 	rawOut := string(out)
 	r.RequestData.Branch = GitBranchFromInfo(rawOut)
@@ -206,7 +206,7 @@ func (r *RequestPayload) GetSHA() {
 
 	out, err := exec.Command("git", "rev-parse", "HEAD").CombinedOutput()
 	if err != nil {
-		r.Logger.Fatal(err)
+		r.Logger.Fatal("git error using rev-parse", err)
 	}
 	rawOut := string(out)
 	rawOut = strings.TrimSuffix(rawOut, "\n")
@@ -220,7 +220,7 @@ func (r *RequestPayload) GetHostname() {
 
 	h, err := os.Hostname()
 	if err != nil {
-		r.Logger.Fatal(err)
+		r.Logger.Fatal("unable to detect hostname", err)
 	}
 	r.RequestData.Hostname = h
 }

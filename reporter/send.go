@@ -3,7 +3,7 @@ package reporter
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -65,7 +65,7 @@ func (s sender) Send(remoteURL string, payload RequestPayload) error {
 	url := remoteURL + "/runs"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonValue))
 	if err != nil {
-		return err
+		return fmt.Errorf("Unable to create upload request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add(IdempotencyKeyHeader, payload.IdempotencyKey)
@@ -74,11 +74,11 @@ func (s sender) Send(remoteURL string, payload RequestPayload) error {
 
 	rreq, err := retryablehttp.FromRequest(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("Unable to create retryable request: %w", err)
 	}
 	resp, err := s.client.Do(rreq)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error uploading data: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -86,9 +86,9 @@ func (s sender) Send(remoteURL string, payload RequestPayload) error {
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			s.Logger.Errorln(err, resp.StatusCode)
+			return fmt.Errorf("Error decoding response: %v", err)
 		}
-		s.Logger.Debugln(string(body))
-		return errors.New(string(body))
+		return fmt.Errorf("Upload status code: %v, body: %v", resp.StatusCode, string(body))
 	}
 
 	return err
