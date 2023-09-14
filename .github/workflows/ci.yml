@@ -27,7 +27,7 @@ jobs:
           git diff --exit-code -- go.mod go.sum
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
           args: --snapshot --skip-publish --rm-dist
@@ -59,7 +59,7 @@ jobs:
           git diff --exit-code -- go.mod go.sum
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
           args: release --rm-dist
