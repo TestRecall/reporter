@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -83,7 +83,7 @@ func (s sender) Send(remoteURL string, payload RequestPayload) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 201 {
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			s.Logger.Errorln(err, resp.StatusCode)
 			return fmt.Errorf("Error decoding response: %v", err)

@@ -3,7 +3,7 @@ package integration_test
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -29,7 +29,7 @@ func TestUpload(t *testing.T) {
 	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
 	router := http.NewServeMux()
 	router.HandleFunc("/runs", func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 
 		params := new(reporter.RequestData)

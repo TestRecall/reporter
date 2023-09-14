@@ -2,7 +2,7 @@ package reporter_test
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,7 +22,7 @@ func TestSendOK(t *testing.T) {
 		assert.Equal(t, "", username)
 		assert.Equal(t, uploadToken, password)
 
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 
 		data := new(reporter.RequestData)

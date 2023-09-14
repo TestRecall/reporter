@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -278,7 +277,7 @@ func (r *RequestPayload) GetRunData() {
 	r.RequestData.Filenames = files
 
 	for _, file := range files {
-		data, err := ioutil.ReadFile(file)
+		data, err := os.ReadFile(file)
 		if err != nil {
 			r.Logger.Fatal(err, noFileMessage(file))
 		}

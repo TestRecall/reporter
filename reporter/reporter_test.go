@@ -2,7 +2,6 @@ package reporter_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -61,7 +60,7 @@ func TestFailureCount(t *testing.T) {
 
 func getFixture(filename string) []byte {
 	fp := filepath.Join("fixtures", filename)
-	b, err := ioutil.ReadFile(fp)
+	b, err := os.ReadFile(fp)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -216,7 +215,7 @@ func newRepo(t *testing.T) (string, func()) {
 }
 
 func tempDir(t *testing.T) (string, func()) {
-	dir, err := ioutil.TempDir("", "tr-git-tests-")
+	dir, err := os.MkdirTemp("", "tr-git-tests-")
 	assert.NoError(t, err)
 	return dir, func() { os.RemoveAll(dir) }
 }
@@ -271,19 +270,19 @@ func gitCommit(dir, msg string) ([]byte, error) {
 
 func createFooFile(dir string) error {
 	d1 := []byte("hello\ngo\n")
-	err := ioutil.WriteFile(dir+"/foo.txt", d1, 0644)
+	err := os.WriteFile(dir+"/foo.txt", d1, 0644)
 	return err
 }
 
 func createBarFile(dir string) error {
 	d1 := []byte("hello\ngo\n")
-	err := ioutil.WriteFile(dir+"/bar.txt", d1, 0644)
+	err := os.WriteFile(dir+"/bar.txt", d1, 0644)
 	return err
 }
 
 func createBuzzFile(dir string) error {
 	d1 := []byte("hello\ngo\n")
-	err := ioutil.WriteFile(dir+"/buzz.txt", d1, 0644)
+	err := os.WriteFile(dir+"/buzz.txt", d1, 0644)
 	return err
 }
 
@@ -295,7 +294,7 @@ func runCmd(dir, c string) ([]byte, error) {
 }
 
 func TestGetRunData(t *testing.T) {
-	d, err := ioutil.TempDir("", "s-")
+	d, err := os.MkdirTemp("", "s-")
 	assert.NoError(t, err)
 	defer os.RemoveAll(d)
 
