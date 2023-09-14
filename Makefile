@@ -5,7 +5,8 @@ test:
 
 .PHONY: setup
 setup:
-	go get -u github.com/jstemmer/go-junit-report
+	go install github.com/jstemmer/go-junit-report@latest
+	go install github.com/goreleaser/goreleaser@latest
 	go mod tidy
 
 .PHONY: release
