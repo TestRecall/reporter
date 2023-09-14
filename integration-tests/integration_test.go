@@ -68,13 +68,13 @@ func TestUpload(t *testing.T) {
 	setEnv(t, "CI_JOB_ID", "1")
 	setEnv(t, "CI_JOB_URL", "https://localhost:7788")
 
-	out, err := runCmd("..", "./dist/linux_linux_amd64/reporter -file integration-tests/fixtures/small.xml -debug true")
+	out, err := runCmd("..", "./dist/linux_linux_amd64_v1/reporter -file integration-tests/fixtures/small.xml -debug true")
 	assert.NoError(t, err, string(out))
 
-	out, err = runCmd("..", "./dist/linux_linux_amd64/reporter -multi before")
+	out, err = runCmd("..", "./dist/linux_linux_amd64_v1/reporter -multi before")
 	assert.NoError(t, err, string(out))
 
-	out, err = runCmd("..", "./dist/linux_linux_amd64/reporter -multi after")
+	out, err = runCmd("..", "./dist/linux_linux_amd64_v1/reporter -multi after")
 	assert.NoError(t, err, string(out))
 }
 

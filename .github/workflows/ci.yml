@@ -22,7 +22,7 @@ jobs:
 
       - name: Download dependencies
         run: |
-          go get github.com/jstemmer/go-junit-report
+          go install github.com/jstemmer/go-junit-report/v2@latest
           go mod tidy
           git diff --exit-code -- go.mod go.sum
 
