@@ -3,6 +3,7 @@ package integration_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/testrecall/reporter/reporter"
+	"golang.org/x/sys/unix"
 )
 
 func TestUpload(t *testing.T) {
@@ -68,13 +70,25 @@ func TestUpload(t *testing.T) {
 	setEnv(t, "CI_JOB_ID", "1")
 	setEnv(t, "CI_JOB_URL", "https://localhost:7788")
 
-	out, err := runCmd("..", "./dist/linux_linux_amd64_v1/reporter -file integration-tests/fixtures/small.xml -debug true")
+	u := unix.Utsname{}
+	unix.Uname(&u)
+	machine := strings.Trim(string(u.Machine[:]), "\x00")
+
+	executable_path := "./dist/linux_linux_amd64_v1/reporter"
+	if machine == "arm64" {
+		executable_path = "./dist/macos_darwin_arm64/reporter"
+	}
+
+	fmt.Println("mahein is", machine)
+	fmt.Println("executable_path is", executable_path)
+
+	out, err := runCmd("..", fmt.Sprintf("%s -file integration-tests/fixtures/small.xml -debug true", executable_path))
 	assert.NoError(t, err, string(out))
 
-	out, err = runCmd("..", "./dist/linux_linux_amd64_v1/reporter -multi before")
+	out, err = runCmd("..", fmt.Sprintf("%s -multi before", executable_path))
 	assert.NoError(t, err, string(out))
 
-	out, err = runCmd("..", "./dist/linux_linux_amd64_v1/reporter -multi after")
+	out, err = runCmd("..", fmt.Sprintf("%s -multi after", executable_path))
 	assert.NoError(t, err, string(out))
 }
 
