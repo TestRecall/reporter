@@ -11,7 +11,7 @@ builds:
         - -X main.RemoteURL=https://api.testrecall.com
       id: macos
       goos: [darwin]
-      goarch: [amd64]
+      goarch: [amd64, arm64]
       env:
         - CGO_ENABLED=0
 
