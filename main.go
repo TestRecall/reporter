@@ -54,14 +54,7 @@ func main() {
 		logger.Level = logrus.InfoLevel
 	}
 
-	flags := map[string]string{}
-	flag.VisitAll(func(f *flag.Flag) {
-		value := f.Value.String()
-		if value != "" {
-			flags[f.Name] = value
-		}
-	})
-
+	flagsMap := mapFlags()
 	payload := reporter.RequestPayload{
 		Filename:    *junitFile,
 		UploadToken: "",
@@ -73,7 +66,7 @@ func main() {
 
 			Hostname:        *hostName,
 			ReporterVersion: Version + "-" + Commit,
-			Flags:           flags,
+			Flags:           flagsMap,
 
 			Branch: *gitBranch,
 			SHA:    *gitSHA,
@@ -114,6 +107,17 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+func mapFlags() map[string]string {
+	flags := map[string]string{}
+	flag.VisitAll(func(f *flag.Flag) {
+		value := f.Value.String()
+		if value != "" {
+			flags[f.Name] = value
+		}
+	})
+	return flags
 }
 
 func shouldExitOnFail(s string) bool {
