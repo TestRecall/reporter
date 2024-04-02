@@ -7,7 +7,7 @@ require (
 	github.com/joshdk/go-junit v1.0.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.5.1
-	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e
+	golang.org/x/sys v0.18.0
 )
 
 require (
