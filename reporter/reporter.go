@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 
 	junit "github.com/joshdk/go-junit"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"github.com/testrecall/reporter/ci"
 )
 
@@ -270,16 +270,17 @@ func (r *RequestPayload) GetRunData() {
 		r.Logger.Fatal(err, MultiErrorMessage)
 	}
 
-	files, err := SearchReportFiles(r.Filename)
+	fs := afero.NewOsFs()
+	files, err := SearchReportFiles(fs, r.Filename)
 	if err != nil {
-		r.Logger.Fatal(err, noFileMessage(r.Filename))
+		r.Logger.Fatal(err)
 	}
 	r.RequestData.Filenames = files
 
 	for _, file := range files {
 		data, err := os.ReadFile(file)
 		if err != nil {
-			r.Logger.Fatal(err, noFileMessage(file))
+			r.Logger.Fatal(err)
 		}
 		r.RequestData.RunData = append(r.RequestData.RunData, data)
 	}
@@ -315,16 +316,27 @@ var defaultPatterns = []string{
 	"/tmp/test-results/report*.xml",
 }
 
-func SearchReportFiles(pattern string) ([]string, error) {
+func SearchReportFiles(fs afero.Fs, pattern string) ([]string, error) {
+	// check for suplied pattern
 	if pattern != "" {
-		return filepath.Glob(pattern)
+		files, err := afero.Glob(fs, pattern)
+		if err != nil {
+			return []string{}, err
+		}
+
+		if len(files) == 0 {
+			return []string{}, errors.New(noFileMessage(pattern))
+		}
+
+		return files, nil
 	}
 
 	for _, p := range defaultPatterns {
-		if matched, err := filepath.Glob(p); err != nil || len(matched) > 0 {
+		if matched, err := afero.Glob(fs, p); err != nil || len(matched) > 0 {
 			return matched, err
 		}
 	}
 
-	return []string{}, nil
+	// no files found
+	return []string{}, errors.New(noFileMessage(pattern))
 }

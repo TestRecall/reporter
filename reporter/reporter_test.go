@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/testrecall/reporter/reporter"
 )
@@ -321,11 +322,18 @@ func TestGetRunData(t *testing.T) {
 		_, err = os.Create(file)
 		assert.NoError(t, err)
 
-		matches, err := reporter.SearchReportFiles(pattern)
+		fs := afero.NewOsFs()
+		matches, err := reporter.SearchReportFiles(fs, pattern)
 		assert.NoError(t, err)
 
 		if tt.match != len(matches) {
 			t.Errorf("wanted %v got %v, with path %s pattern %s", tt.match, len(matches), file, pattern)
 		}
 	}
+}
+
+func TestMissingFile(t *testing.T) {
+	fs := afero.NewMemMapFs()
+	_, err := reporter.SearchReportFiles(fs, "")
+	assert.Error(t, err)
 }
