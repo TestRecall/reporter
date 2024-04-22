@@ -2,3 +2,7 @@ vendor
 deployment
 dist
 report.xml
+.vscode
+.idea
+.DS_Store
+TODO
