@@ -35,9 +35,12 @@ chmod +x testrecall-reporter
 ### From source:
 
 ```bash
-go get github.com/golangci/golangci-lint/cmd/golangci-lint@v0.2.0
+git clone github.com/testrecall/reporter
 
-reporter --version
+make setup
+make build
+
+./dist/linux_linux_arm64/reporter --version
 ```
 
 ## Usage
@@ -56,11 +59,10 @@ npm run test # => output report.xml
 
 ### Configuration
 
-| flag    | environment       | values                             | note                                                                                         |
-| ------- | ----------------- | ---------------------------------- | -------------------------------------------------------------------------------------------- |
-| `file`  |                   | \<glob\>                           | file path or glob pattern for xml results, e.g. (`/tmp/report.xml`, or `build/*/junit*.xml`) |
-| `multi` |                   | \<'before' \| 'multi' \| 'after'\> | enables multi-stage uploads, for suites that execute on multiple runners                     |
-|         | `TR_UPLOAD_TOKEN` | \<string\>                         | upload token for your test project                                                           |
+| flag   | environment       | values     | note                                                                                         |
+| ------ | ----------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| `file` |                   | \<glob\>   | file path or glob pattern for xml results, e.g. (`/tmp/report.xml`, or `build/*/junit*.xml`) |
+|        | `TR_UPLOAD_TOKEN` | \<string\> | upload token for your test project                                                           |
 
 The test reporter will pick up most configuration options by default, including common default locations for test reports.
 
