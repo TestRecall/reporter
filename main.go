@@ -20,7 +20,6 @@ var (
 
 	debug       = flag.Bool("debug", false, "debug log level")
 	setExitCode = flag.String("setExitCode", "", "[true]/false', exits 1 if tests failed")
-	multi       = flag.String("multi", "", reporter.MultiErrorMessage)
 
 	junitFile = flag.String("file", "", "junit file")
 	hostName  = flag.String("host", "", "host name")
@@ -62,7 +61,6 @@ func main() {
 		RequestData: reporter.RequestData{
 			RunData:   [][]byte{},
 			Filenames: []string{*junitFile},
-			Multi:     *multi,
 
 			Hostname:        *hostName,
 			ReporterVersion: Version + "-" + Commit,

@@ -84,12 +84,6 @@ func TestUpload(t *testing.T) {
 
 	out, err := runCmd("..", fmt.Sprintf("%s -file integration-tests/fixtures/small.xml -debug true", executable_path))
 	assert.NoError(t, err, string(out))
-
-	out, err = runCmd("..", fmt.Sprintf("%s -multi before", executable_path))
-	assert.NoError(t, err, string(out))
-
-	out, err = runCmd("..", fmt.Sprintf("%s -multi after", executable_path))
-	assert.NoError(t, err, string(out))
 }
 
 func runCmd(dir, c string) ([]byte, error) {

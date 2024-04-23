@@ -18,18 +18,6 @@ import (
 
 var branchCommand = strings.Fields("git log -n 1 --pretty=%D HEAD")
 
-const MultiErrorMessage = `
-valid values: before/partial/after
-
-multi allows TestRecall to group multiple or parallel test reports together.
-Otherwise each partial report will be considered its on build.
-
- - 'before' must be sent before any results are uploaded, to let TestRecall
-know that multiple reports will be uploaded
- - 'partial' must be sent with any results that will be grouped together
- - 'after' must be called after all uploads are finished, to prevent
-acidenitally combining extra files`
-
 const noTokenMessage = `
 	TR_UPLOAD_TOKEN must be set in the environment,
 	find the token for this project here:
@@ -42,12 +30,6 @@ func noFileMessage(filename string) string {
 		check if the path is correct and being passed to the reporter
 	`, filename)
 }
-
-const (
-	MultiBefore  = "before"
-	MutliPartial = "partial"
-	MultiAfter   = "after"
-)
 
 const IdempotencyKeyHeader = "Idempotency-Key"
 
@@ -66,7 +48,6 @@ type RequestPayload struct {
 type RequestData struct {
 	RunData   [][]byte `json:"run"`
 	Filenames []string `json:"file_names"`
-	Multi     string   `json:"multi"`
 
 	Hostname        string            `json:"hostname"`
 	ReporterVersion string            `json:"reporter_version"`
@@ -113,10 +94,6 @@ func (r RequestPayload) isVendorKnown() bool {
 }
 
 func (r RequestPayload) FailureCount() (int, bool) {
-	if mutli, _ := r.isMulti(); mutli {
-		return 0, true
-	}
-
 	run, err := junit.Ingest(r.RequestData.RunData[0])
 	if err != nil {
 		r.Logger.Debug(err)
@@ -252,24 +229,7 @@ func (r *RequestPayload) GetBuildURL() {
 	}
 }
 
-func (r *RequestPayload) isMulti() (bool, error) {
-	multi := r.RequestData.Multi
-	switch multi {
-	case "":
-		return false, nil
-	case MultiBefore, MutliPartial, MultiAfter:
-		return true, nil
-	default:
-		return false, errors.New(multi)
-	}
-}
-
 func (r *RequestPayload) GetRunData() {
-	multi, err := r.isMulti()
-	if err != nil {
-		r.Logger.Fatal(err, MultiErrorMessage)
-	}
-
 	fs := afero.NewOsFs()
 	files, err := SearchReportFiles(fs, r.Filename)
 	if err != nil {
@@ -286,10 +246,7 @@ func (r *RequestPayload) GetRunData() {
 	}
 
 	if r.Filename == "" && len(r.RequestData.RunData) == 0 {
-		// multi allows uploading no data
-		if !multi {
-			r.Logger.Fatal("-file is a required field")
-		}
+		r.Logger.Fatal("-file is a required field")
 	}
 }
 
